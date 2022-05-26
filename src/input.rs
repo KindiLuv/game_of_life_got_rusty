@@ -1,16 +1,8 @@
-import bevy::{prelude::*, core::FixedTimestep};
+use bevy::prelude::*;
+use bevy::core::FixedTimestep;
 
 const CAM_SPEED: f32 = 15.0;
 const CAM_ZOOM: f32 = 1.0;
-
-#[derive(Component)]
-pub struct MainCamera;
-
-#[derive(Component)]
-struct Movement {
-    plane_speed : vec3,
-    zoom_speed : f32,
-}
 
 pub struct InputPlugin;
 
@@ -32,8 +24,8 @@ pub struct MainCamera;
 
 #[derive(Component)]
 struct Movement {
-    plane_speed: Vec3,
-    zoom_speed: f32,
+    plane_speed : Vec3,
+    zoom_speed : f32,
 }
 
 fn setup(mut commands: Commands) {
@@ -70,8 +62,8 @@ fn camera_move(
         .expect("No transform on main camera?!");
     movement.plane_speed = (movement.plane_speed  + move_direction)
         .clamp(
-            Vec3::new(-CAMERA_MOVE_SPEED, -CAMERA_MOVE_SPEED, -CAMERA_MOVE_SPEED),
-            Vec3::new(CAMERA_MOVE_SPEED, CAMERA_MOVE_SPEED, CAMERA_MOVE_SPEED)
+            Vec3::new(-CAM_SPEED, -CAM_SPEED, -CAM_SPEED),
+            Vec3::new(CAM_SPEED, CAM_SPEED, CAM_SPEED)
         );
 
     if keyboard_input.pressed(KeyCode::Space) {
@@ -102,7 +94,7 @@ fn camera_zoom(
         movement.zoom_speed = 0.0;
     }
     
-    movement.zoom_speed = (movement.zoom_speed + zoom_direction).clamp(-CAMERA_ZOOM_SPEED, CAMERA_ZOOM_SPEED);
+    movement.zoom_speed = (movement.zoom_speed + zoom_direction).clamp(-CAM_ZOOM, CAM_ZOOM);
     orto_proj.scale = (orto_proj.scale + movement.zoom_speed).clamp(1.0, 6.0);
 
     if (orto_proj.scale - 1.0).abs() < 0.00001 || (orto_proj.scale - 6.0).abs() < 0.00001 {

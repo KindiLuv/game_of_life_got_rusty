@@ -1,16 +1,16 @@
 use bevy::app::AppExit;
-use crate::input::MainCamera;
+use crate::{input::MainCamera, GRID_SIZE};
 use bevy::{prelude::*, core::FixedTimestep};
-use crate::interface::{GameExitEvent, SimulationStartEvent, SimulationStopEvent};
+use crate::interface::{GameExitEvent, StartSimEvent, StopSimEvent};
 
 const SPRITE_SIZE: f32 = 32.0;
 
-pub struct SimulationPlugin;
+pub struct GamePlugin;
 
-impl Plugin for SimulationPlugin {
+impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app
-            .insert_resource(ClearColor(Color::rgb(0.01, 0.1, 0.001)))
+            .insert_resource(ClearColor(Color::rgb(0.01, 0.1, 0.01)))
             .insert_resource(MouseWorldPositionDraw(None))
             .insert_resource(MouseWorldPositionErase(None))
             .insert_resource(IsSimulationRunning(false))
@@ -56,15 +56,13 @@ struct Cell {
 
 enum CellState {
     Alive,
-    Dead,
     Empty
 }
 
 #[derive(Default)]
 struct SpriteImages {
     empty_cell: Handle<Image>,
-    alive_cell: Handle<Image>,
-    dead_cell: Handle<Image>,
+    alive_cell: Handle<Image>
 }
 
 #[derive(Default)]
@@ -102,8 +100,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands
         .insert_resource(SpriteImages {
             empty_cell: asset_server.load("sprites/empty_cell.png"),
-            alive_cell: asset_server.load("sprites/alive_cell.png"),
-            dead_cell: asset_server.load("sprites/dead_cell.png"),
+            alive_cell: asset_server.load("sprites/alive_cell.png")
         });
 }
 
@@ -187,12 +184,12 @@ fn simulation_step(
         for (cell, _sprite) in cells.iter_mut() {
             life_grid.push(match cell.alive {
                 CellState::Alive => true,
-                CellState::Dead | CellState::Empty => false,
+                CellState::Empty => false,
             });
         }
 
         for (ind, (mut cell,mut sprite)) in cells.iter_mut().enumerate() {
-            let mut neighbour_cnt = 0;
+            let mut neighbour_count = 0;
             let x = ind as i32 % crate::GRID_SIZE;
             let y = ind as i32 / crate::GRID_SIZE;
 
@@ -201,23 +198,23 @@ fn simulation_step(
                     if (xi != x || yi != y) && xi >= 0 && xi < crate::GRID_SIZE && yi >= 0 && yi < crate::GRID_SIZE {
                         let lin_ind = xi + yi * crate::GRID_SIZE;
                         if life_grid[lin_ind as usize] {
-                            neighbour_cnt += 1;
+                            neighbour_count += 1;
                         }
                     }
                 }
             }
 
-            if neighbour_cnt < 2 || neighbour_cnt > 3 {
+            if neighbour_count < 2 || neighbour_count > 3 {
                 match cell.alive {
                     CellState::Alive => {
-                        cell.alive = CellState::Dead;
-                        *sprite = sprite_images.dead_cell.clone();
+                        cell.alive = CellState::Empty;
+                        *sprite = sprite_images.empty_cell.clone();
                     },
-                    CellState::Dead | CellState::Empty => {},
+                    CellState::Empty => {}
                 }
             }
 
-            if neighbour_cnt == 3 {
+            if neighbour_count == 3 {
                 cell.alive = CellState::Alive;
                 *sprite = sprite_images.alive_cell.clone();
             }
@@ -235,7 +232,7 @@ fn exit_game(
 }
 
 fn set_simulation(
-    mut event_reader: EventReader<SimulationStartEvent>,
+    mut event_reader: EventReader<StartSimEvent>,
     mut start_sim: ResMut<IsSimulationRunning>,
 ) {
     if event_reader.iter().next().is_some() {
@@ -244,7 +241,7 @@ fn set_simulation(
 }
 
 fn unset_simulation(
-    mut event_reader: EventReader<SimulationStopEvent>,
+    mut event_reader: EventReader<StopSimEvent>,
     mut start_sim: ResMut<IsSimulationRunning>,
 ) {
     if event_reader.iter().next().is_some() {

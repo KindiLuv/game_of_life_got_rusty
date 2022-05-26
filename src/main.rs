@@ -1,9 +1,12 @@
 use bevy::prelude::*;
 use interface::MainMenuPlugin;
+use game::GamePlugin;
+use input::InputPlugin;
 
 const GRID_SIZE: i32 = 100;
 
 mod interface;
+mod game;
 mod input;
 
 fn main() {
@@ -15,6 +18,8 @@ fn main() {
             ..Default::default()
         })
         .add_plugins(DefaultPlugins)
+        .add_plugin(GamePlugin)
+        .add_plugin(InputPlugin)
         .add_plugin(MainMenuPlugin)
         .run()
 }
