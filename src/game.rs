@@ -10,7 +10,7 @@ pub struct GamePlugin;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app
-            .insert_resource(ClearColor(Color::rgb(0.01, 0.1, 0.01)))
+            .insert_resource(ClearColor(Color::rgb(0.1, 0.1, 0.1)))
             .insert_resource(MouseWorldPositionDraw(None))
             .insert_resource(MouseWorldPositionErase(None))
             .insert_resource(IsSimulationRunning(false))

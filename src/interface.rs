@@ -22,7 +22,6 @@ enum ButtonType {
     Exit
 }
 
-
 pub struct MainMenuPlugin;
 
 impl Plugin for MainMenuPlugin{
@@ -122,9 +121,9 @@ fn build_text(value: &str, asset_server: &Res<AssetServer>) -> TextBundle {
         text: Text::with_section(
             value,
             TextStyle {
-                font: asset_server.load("fonts/Anonymice.ttf"),
-                font_size: 20.0,
-                color: Color::rgb(0.9, 0.9, 0.9),
+                font: asset_server.load("fonts/SixThousand.ttf"),
+                font_size: 35.0,
+                color: Color::rgb(0.1, 0.1, 0.1),
             },
             Default::default()
         ),
