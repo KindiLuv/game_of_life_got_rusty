@@ -83,6 +83,23 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>){
                                     })
                                     .insert(ClassicButton(ButtonType::Start));
 
+                                    //Counter Display;
+                                parent
+                                    .spawn_bundle(NodeBundle {
+                                        style: Style {
+                                            size: Size::new(Val::Px(85.0), Val::Px(85.0)),
+                                            margin: Rect::all(Val::Auto),
+                                            justify_content: JustifyContent::Center,
+                                            align_items: AlignItems::Center,
+                                            ..Default::default()
+                                        },
+                                        image: UiImage(asset_server.load("sprites/button.png")),
+                                        ..Default::default()
+                                    })
+                                    .with_children( |parent| {
+                                        parent.spawn_bundle(build_text("count", &asset_server));
+                                    });
+
                                 parent
                                     .spawn_bundle(build_button(&asset_server))
                                     .with_children( |parent| {

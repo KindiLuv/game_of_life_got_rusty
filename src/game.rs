@@ -1,9 +1,8 @@
 use bevy::app::AppExit;
-use crate::{input::MainCamera, GRID_SIZE};
+use crate::input::MainCamera;
 use bevy::{prelude::*, core::FixedTimestep};
 use crate::interface::{GameExitEvent, StartSimEvent, StopSimEvent};
-
-const SPRITE_SIZE: f32 = 32.0;
+use crate::SPRITE_SIZE;
 
 pub struct GamePlugin;
 

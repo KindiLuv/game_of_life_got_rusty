@@ -3,7 +3,8 @@ use interface::MainMenuPlugin;
 use game::GamePlugin;
 use input::InputPlugin;
 
-const GRID_SIZE: i32 = 100;
+const GRID_SIZE: i32 = 250;
+const SPRITE_SIZE: f32 = 32.0;
 
 mod interface;
 mod game;

@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 use bevy::core::FixedTimestep;
+use crate::GRID_SIZE;
+use crate::SPRITE_SIZE;
 
 const CAM_SPEED: f32 = 15.0;
 const CAM_ZOOM: f32 = 1.0;
@@ -15,6 +17,7 @@ impl Plugin for InputPlugin {
                     .with_run_criteria(FixedTimestep::step(0.033))
                     .with_system(camera_move)
                     .with_system(camera_zoom)
+                    .with_system(camera_center)
             );
     }
 }
@@ -38,18 +41,34 @@ fn setup(mut commands: Commands) {
         });
 }
 
+fn camera_center(
+    mut camera: Query<&mut Transform, With<MainCamera>>,
+    keyboard_input: Res<Input<KeyCode>>
+)
+{
+    if keyboard_input.pressed(KeyCode::T) {
+        let grid_size = GRID_SIZE as f32;
+        let center = Vec3::new(grid_size/2.0 * SPRITE_SIZE, grid_size/2.0 * SPRITE_SIZE, 0.0);
+    let mut transform = camera
+        .iter_mut()
+        .next()
+        .expect("No transform on main camera?!");
+    transform.translation = center;
+    }
+}
+
 fn camera_move(
     mut camera: Query<(&mut Transform, &mut Movement), With<MainCamera>>,
     keyboard_input: Res<Input<KeyCode>>
 ) {
     let mut move_direction = Vec3::new(0.0, 0.0, 0.0);
-    if keyboard_input.pressed(KeyCode::W) {
+    if keyboard_input.pressed(KeyCode::Z) {
         move_direction.y += 1.0;
     }
     if keyboard_input.pressed(KeyCode::S) {
         move_direction.y -= 1.0;
     }
-    if keyboard_input.pressed(KeyCode::A) {
+    if keyboard_input.pressed(KeyCode::Q) {
         move_direction.x -= 1.0;
     }
     if keyboard_input.pressed(KeyCode::D) {
@@ -78,7 +97,7 @@ fn camera_zoom(
     keyboard_input: Res<Input<KeyCode>>
 ) {
     let mut zoom_direction = 0.0;
-    if keyboard_input.pressed(KeyCode::Q) {
+    if keyboard_input.pressed(KeyCode::A) {
         zoom_direction = 0.01;
     }
     if keyboard_input.pressed(KeyCode::E) {
