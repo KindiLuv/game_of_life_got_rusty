@@ -19,6 +19,8 @@ Turing completeness and even physics support. The goal is to show that event wit
 - `D` to go right
 - `A` to zoom out
 - `E` to zoom in
+- `Space` to stop camera motion
+- `T` to center the camera on the grid
 
 ## What Next?
 
