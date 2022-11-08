@@ -4,6 +4,12 @@ Hi! Here is my version of conway's game of life made in Rust using BevyEngine. I
 
 My goal with this alpha was to learn ECS pattern as well as to try the bevy engine, as recommended by a teacher.
 
+## Installation
+
+To run this program you will need rust installed on your machine, luckily for you, it is quite easy to get. To Install rust, follow the guidelines [here](https://www.rust-lang.org/tools/install). On windows, it even default into your PATH variables. You can also make sure you have it installed by typing `rustup` in your favourite terminal. 
+
+Then, you can get onto a terminal and place yourself inside the projects (at the same level than the `cargo.lock` file) and you can run the command `cargo build`. This might take a couple minutes depending on your hardware. Then a simple `cargo run` will start the game!
+
 ## Concept
 
 Conway's game of life is as much of a game that it is a scientific tool about
